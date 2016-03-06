@@ -1,0 +1,22 @@
+{
+	"name": "mario-deluna/image-butler-core",
+	"type": "project",
+	"description": "Super simple image hosting microservice.",
+	"version": "1.0.0",
+	"homepage": "https://github.com/mario-deluna/image-butler",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mario Döring",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"\\ImageButler\\": "src/"
+		},
+		"files": ["wake.php"]
+	},
+	"require": {
+	}
+}

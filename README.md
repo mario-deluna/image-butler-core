@@ -1,2 +1,3 @@
-# image-butler-core
-The Image butler core repository.
+# Image Butler Core
+
+The microservice core.
