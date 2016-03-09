@@ -17,6 +17,11 @@
 		},
 		"files": ["wake.php"]
 	},
+	"autoload-dev": {
+	    "psr-4": {
+	        "ImageButler\\Test\\": "tests/"
+	    }
+	},
 	"require": {
 	}
 }

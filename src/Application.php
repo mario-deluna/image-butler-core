@@ -26,7 +26,9 @@ class Application extends ServiceContainer
 	 */ 
 	public function bindServices()
 	{
-		// 
-		$this->bind('image.key_gen', Image\KeyGenerator\Hash, '');
+		// The image key generator
+		$this->bind('image.keygen', Image\KeyGenerator\Hash::class, 
+			'@image.keygen.hash.algorithm'
+		]);
 	}
 }
