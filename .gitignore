@@ -1,3 +1,5 @@
 # Backend
 vendor/*
 cache/*
+coverage/*
+phpunit.phar
