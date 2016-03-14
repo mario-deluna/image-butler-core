@@ -4,6 +4,7 @@ namespace ImageButler\RequestHandler;
 
 use ImageButler\HTTP\Request;
 use ImageButler\HTTP\Response;
+use ImageButler\ServiceContainer;
 
 class Image implements RequestHandlerInterface
 {
@@ -42,14 +43,32 @@ class Image implements RequestHandlerInterface
 	 */
 	protected $availableImageFormats = array();
 
+	/**
+	 * Application object
+	 * 
+	 * @var 
+	 */
+	protected $application = null;
+
 	/** 
 	 * Construct a new image request handler
 	 * 
-	 * @param array 			$availableImageFormats
+	 * @param ServiceContainer  		$application
+	 * @param array 					$availableImageFormats
+	 * @return void
 	 */
-	public function __construct(array $availableImageFormats = array())
-	{
+	public function __construct(
+		ServiceContainer $application, 
+		$availableImageFormats = array()
+	){
+		// assign the applications service container
+		$this->application = $application;
+
 		// always allow jpg images by default
+		if (!is_array($availableImageFormats)) {
+			$availableImageFormats = array();
+		}
+
 		$this->availableImageFormats = array_merge($availableImageFormats, array('jpg'));
 	}
 
@@ -82,13 +101,31 @@ class Image implements RequestHandlerInterface
 		// mean we have to render an image or return image details.
 		if ((!is_null($this->fileName)) && (!is_null($this->fileExtension))) {
 
+			// resolve the image resource from the name
+			// and image domain 
+			$image = $this->fileName;//$this->finder->find($this->fileDomain, $this->fileName);
+
 			// if the file extension is a vaild image
 			// format run the image render action
 			if (in_array($this->fileExtension, $this->availableImageFormats)) {
-				return $this->actionContainer->run('action.render');
+				return $this->executeAction($request, 'Render', array(&$image));
 			}
+
+			return $this->executeAction($request, 'Info', array(&$image));
 		}
-		return new Response(time());
+	}
+
+	/**
+	 * Execute an application action
+	 */
+	protected function executeAction(Request $request, $actionName, array $arguments = array())
+	{
+		$actionName = "ImageButler\\Action\\" . $actionName;
+
+		$action = new $actionName($request);
+		$action->setContainer($this->application);
+
+		return call_user_func_array(array($action, 'execute'), $arguments);
 	}
 
 	/**

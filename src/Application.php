@@ -37,7 +37,16 @@ class Application extends ServiceContainer
      */ 
     public function bindServices()
     {
-        $this->bind('handler.image', __NAMESPACE__ . "\\RequestHandler\\Image");
+        $this->bind('handler.image', __NAMESPACE__ . "\\RequestHandler\\Image", array(
+
+            // the image handler needs the application object
+            // to execute actions with dependencies. So we 
+            // just pass $this to the constructor
+            $this,
+
+            // the other dependency are the available image formats
+            '#image.availableFormats',
+        ));
     }   
 
     /**
