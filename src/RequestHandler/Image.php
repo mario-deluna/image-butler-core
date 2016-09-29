@@ -83,13 +83,24 @@ class Image implements RequestHandlerInterface
 		$this->method = $request->method();
 		$this->parseRequestUri($request->uri());
 
+		// GET = image render / info
 		if ($this->method === 'GET') {
 			return $this->handleGetRequest($request);
+		}
+
+		// POST = create image 
+		elseif ($this->method === 'POST') {
+			return $this->handlePostRequest($request);
+		}
+
+		// DELETE = delete image 
+		elseif ($this->method === 'DELETE') {
+			return $this->handleDeleteRequest($request);
 		}
 	}
 
 	/**
-	 * Handle a get request
+	 * Handle a GET request
 	 * 
 	 * @param Request 			$request
 	 * @return Response|false
@@ -114,6 +125,8 @@ class Image implements RequestHandlerInterface
 			return $this->executeAction($request, 'Info', array(&$image));
 		}
 	}
+
+	
 
 	/**
 	 * Execute an application action
